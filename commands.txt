@@ -1,0 +1,89 @@
+#Импорт моделей
+from news.models import *
+
+#Создание пользователей
+user1 = User.objects. create(username='Alex', first_name='Alexander')
+user2 = User.objects. create(username='Fox', first_name='Andrew') 
+
+#Создание авторов
+Author.objects.create(authorUser=user1)
+Author.objects.create(authorUser=user2)
+
+#Создание категорий
+Category.objects.create(nameCategory='3D')
+Category.objects.create(nameCategory='Web') 
+Category.objects.create(nameCategory='Python')  
+Category.objects.create(nameCategory='C++')  
+
+#Добавление постов Post object (2)(3)и(4) были удалены
+Post.objects.create(authorPost=Author.objects.get(authorUser=User.objects.get(username='Alex')), typePost='NW', titlePost='abcd', textPost='abcd abcd')
+Post.objects.create(authorPost=Author.objects.get(authorUser=User.objects.get(username='Alex')), typePost='AR', titlePost='efgh', textPost='efgh efgh')
+Post.objects.create(authorPost=Author.objects.get(authorUser=User.objects.get(username='Fox')), typePost='AR', titlePost='ijklm', textPost='ijklm ijklm')
+
+#Присвоение категорий
+p1=Post.objects.get(pk=1)
+p5=Post.objects.get(pk=5)
+p6=Post.objects.get(pk=6)
+c1=Category.objects.get(nameCategory='D3')
+c2=Category.objects.get(nameCategory='Web')
+c3=Category.objects.get(nameCategory='Python')
+c4=Category.objects.get(nameCategory='C++')
+p1.categoryPost.add(c1)
+p5.categoryPost.add(c2,c3)
+p6.categoryPost.add(c4)
+
+#Создание комментариев
+Comment.objects.create(userComment=User.objects.get(username='Fox'), postComment=Post.objects.get(pk=1), textComment='comment from Fox')
+Comment.objects.create(userComment=User.objects.get(username='Fox'), postComment=Post.objects.get(pk=5), textComment='comment2 from Fox')
+Comment.objects.create(userComment=User.objects.get(username='Alex'), postComment=Post.objects.get(pk=6), textComment='comment from Alex')
+Comment.objects.create(userComment=User.objects.get(username='Fox'), postComment=Post.objects.get(pk=6), textComment='Fox to Fox')
+
+# like/dislike Обновление рейтингов объектов
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).like()  
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).dislike()
+Post.objects.get(pk=5).like() 
+Post.objects.get(pk=5).like()
+Post.objects.get(pk=6).like()
+Post.objects.get(pk=6).like()
+Post.objects.get(pk=6).like()
+Post.objects.get(pk=6).dislike()
+Post.objects.get(pk=6).dislike()
+Comment.objects.get(pk=1).like()
+Comment.objects.get(pk=1).like()
+Comment.objects.get(pk=2).like() 
+Comment.objects.get(pk=2).like() 
+Comment.objects.get(pk=3).like()   
+Comment.objects.get(pk=3).dislike()
+Comment.objects.get(pk=4).like() 
+
+#Обнавление рейтингов пользователей
+Author.objects.get(authorUser=User.objects.get(username='Alex')).update_rating()
+Author.objects.get(authorUser=User.objects.get(username='Alex')).ratingAuthor
+Author.objects.get(authorUser=User.objects.get(username='Fox')).update_rating()
+Author.objects.get(authorUser=User.objects.get(username='Fox')).ratingAuthor
+
+#Определение лучшего пользователя
+best = Author.objects.all().order_by('-ratingAuthor')[0] 
+bestUser=best.authorUser
+print(bestUser.username, best.ratingAuthor)
+
+#Определение лучшей статьи
+bestPost = Post.objects.all().order_by('-ratingPost')[0]
+print('Автор лучшей статьи: ', bestPost.authorPost.authorUser.username)
+print('Дата создания статьи: ', str(bestPost.datetimePost))
+print('Рейтин статьи: ', str(bestPost.ratingPost)) 
+print('Заголовок статьи: ', str(bestPost.titlePost))
+print('Превью: ', str(bestPost.preview())) 
+
+#Вывод комментариев к лучшей статье
+comments = bestPost.comment_set.all()
+for c in comments: print('дата',c.datetimeComment,'автор', c.userComment,'рейтинг', c.ratingComment, 'текст',c.textComment)
+
+
+
+
+
