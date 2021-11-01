@@ -60,7 +60,7 @@ Comment.objects.get(pk=3).like()
 Comment.objects.get(pk=3).dislike()
 Comment.objects.get(pk=4).like() 
 
-#Обнавление рейтингов пользователей
+#Обновление рейтингов пользователей
 Author.objects.get(authorUser=User.objects.get(username='Alex')).update_rating()
 Author.objects.get(authorUser=User.objects.get(username='Alex')).ratingAuthor
 Author.objects.get(authorUser=User.objects.get(username='Fox')).update_rating()
